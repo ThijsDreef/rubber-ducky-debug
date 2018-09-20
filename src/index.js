@@ -15,6 +15,8 @@ canvas.height = window.innerHeight;
 
 gl.clearColor(0.5, 0.5, 0.5, 1.0);
 gl.enable(gl.DEPTH_TEST);
+gl.enable(gl.CULL_FACE);
+gl.cullFace(gl.BACK);
 gl.viewport(0, 0, canvas.width, canvas.height);
 
 const shader = new nanogl.Program(gl, vert, frag);
@@ -22,12 +24,13 @@ const shader = new nanogl.Program(gl, vert, frag);
 const p = mat4.create();
 const m = mat4.create();
 
-mat4.perspective(p, 45, canvas.width / canvas.height, 0.001, 10);
+mat4.perspective(p, 45, canvas.width / canvas.height, 1, 10);
 mat4.translate(p, p, [0, -2, 0]);
 mat4.rotateX(p, p, 0.5);
 mat4.translate(m, m, [0, -2.5, -6]);
 
 const model = createModel(json, gl);
+draw();
 
 const img = new Image();
 img.src = 'duck.png';
@@ -52,7 +55,6 @@ function draw() {
 
 function createModel(json, gl) {
     const object = {};
-    console.log(json);
     object.vBuffer = new nanogl.ArrayBuffer(gl, new Float32Array(json.verts), gl.STATIC_DRAW);
     object.nBuffer = new nanogl.ArrayBuffer(gl, new Float32Array(json.normals), gl.STATIC_DRAW);
     object.uvBuffer = new nanogl.ArrayBuffer(gl, new Float32Array(json.texcoords), gl.STATIC_DRAW);
