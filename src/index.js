@@ -12,6 +12,8 @@ import Plane from './plane';
 
 const canvas = document.querySelector('.canvas');
 
+const option = document.querySelector('.options');
+
 const gl = canvas.getContext('webgl');
 
 canvas.width = window.innerWidth;
@@ -74,7 +76,9 @@ function drawCircleDuckies() {
             mat4.translate(m, m, position);
             mat4.rotateY(m, m, -(Math.atan2(nextPosition[2] - position[2], nextPosition[0] - position[0])));
             mat4.scale(m, m, [0.5, 0.5, 0.5]);
+
             position[2] += 5;
+
             shader.uPosition(position);
             shader.uModel(m);
             model.draw(shader);
@@ -92,7 +96,17 @@ function draw() {
     shader.uMvp(p);
     shader.uZoom(1.2);
     shader.uOffset(plane.uOffset * 0.5);
-    drawCircleDuckies();
+    console.log(option);
+    switch (option.value) {
+        case 'grid': {
+            drawGridDuckies();
+            break;
+        }
+        case 'circle': {
+            drawCircleDuckies();
+            break;
+        }
+    }
 
     watershader.bind();
     watershader.uTime(i);
